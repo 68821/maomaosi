@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>猫猫寺？大兴善寺。</title>
+<meta name="description" content="一只猫，把你领到一座千年古寺——大兴善寺。猫是入口，历史是底色。" />
+<meta name="theme-color" content="#E89B5A" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 52 C33 52 24 66 24 79 C24 90 36 98 50 98 C64 98 76 90 76 79 C76 66 67 52 50 52 Z' fill='%23E89B5A'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="images/bg-cover.jpg" />
+<style>
+  :root{
+    --orange:#E89B5A; --red:#B23A2E; --gray:#3F454A; --cyan:#2F6B6B;
+    --cream:#F5EFE6; --gold:#C9A227; --ink:#2b2f33;
+    --serif:'Noto Serif SC','Source Han Serif SC','思源宋体','Songti SC','SimSun',serif;
+    --sans:'Noto Sans SC','Source Han Sans SC','思源黑体','PingFang SC','Microsoft YaHei',sans-serif;
+    --paw:#E89B5A;
+    --hand:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cg fill='%23E89B5A' stroke='%233F454A' stroke-width='1.7' stroke-linejoin='round'%3E%3Crect x='5.5' y='2' width='5.6' height='13' rx='2.8'/%3E%3Crect x='11.5' y='1' width='5.6' height='14' rx='2.8'/%3E%3Crect x='17.5' y='2' width='5.6' height='13' rx='2.8'/%3E%3Crect x='23.5' y='5' width='5.6' height='10' rx='2.8'/%3E%3Cpath d='M3.5 16h23.5a5 5 0 0 1 5 5v6a4 4 0 0 1-4 4H8.5a6 6 0 0 1-6-6v-4.5a4 4 0 0 1 1-4.5z'/%3E%3Cpath d='M2.8 22h6a3.4 3.4 0 0 1 0 6.8H6.6z'/%3E%3C/g%3E%3C/svg%3E") 8 4, pointer;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  html,body{ height:100%; overflow:hidden; overscroll-behavior:none; background:#000; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+  img{ -webkit-user-drag:none; user-select:none; }
+  button{ touch-action:manipulation; }
+  body{ font-family:var(--sans); color:var(--ink); }
+  #viewport{ position:fixed; inset:0; background:#000; }
+  #stage{
+    position:absolute; top:50%; left:50%; width:750px; height:1334px;
+    transform-origin:center center; transform:translate(-50%,-50%) scale(1);
+    background:#000; overflow:hidden;
+    user-select:none; -webkit-user-select:none; touch-action:none;
+  }
+  #stage, #stage *{ cursor:var(--hand) !important; }
+
+  /* SVG 动画原点修正 */
+  .blink, .ear-twig, .tail-twig{ transform-origin:center; transform-box:fill-box; }
+
+  #pawbar{
+    position:absolute; top:0; left:0; right:0; height:74px; z-index:50;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:0 22px; pointer-events:none;
+    background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+  }
+  #pawbar .paw{ width:40px; height:40px; color:rgba(255,255,255,.16); transition:color .45s, filter .45s, transform .3s; }
+  #pawbar .paw.lit{ color:var(--paw); filter:drop-shadow(0 0 6px var(--paw)); }
+  #pawbar .paw.current{ transform:scale(1.22); }
+  #pawbar svg{ width:100%; height:100%; display:block; }
+
+  #pages{ position:absolute; inset:0; }
+  .page{ position:absolute; inset:0; opacity:0; pointer-events:none; z-index:1; overflow:hidden; transform:translateY(14px); visibility:hidden; transition:opacity .5s ease, transform .5s cubic-bezier(.22,.61,.36,1), visibility 0s linear .5s; }
+  .page.active{ opacity:1; pointer-events:auto; z-index:2; transform:none; visibility:visible; transition:opacity .5s ease, transform .5s cubic-bezier(.22,.61,.36,1), visibility 0s; }
+  .page .safe{ position:absolute; inset:0; padding:0 46px; padding-top:96px; padding-bottom:64px; display:flex; flex-direction:column; }
+
+  .serif{ font-family:var(--serif); }
+  .title-xl{ font-size:60px; font-weight:900; line-height:1.25; letter-spacing:.04em; }
+  .title-lg{ font-size:50px; font-weight:700; line-height:1.3; }
+  .title-md{ font-size:38px; font-weight:700; line-height:1.35; }
+  .body{ font-size:27px; font-weight:400; line-height:1.7; color:#333; }
+  .small{ font-size:22px; line-height:1.6; opacity:.72; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:20px 54px; border-radius:999px; font-size:29px; font-weight:600;
+    font-family:var(--sans); letter-spacing:.05em; border:none; color:var(--cream);
+    background:linear-gradient(135deg, var(--orange), #d9823c);
+    box-shadow:0 10px 30px rgba(232,155,90,.35); transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn:active{ transform:scale(.96); }
+  .btn.red{ background:linear-gradient(135deg, var(--red), #932a20); box-shadow:0 10px 30px rgba(178,58,46,.35); }
+  .btn.ghost{ background:rgba(255,255,255,.14); color:#fff; box-shadow:none; border:1px solid rgba(255,255,255,.35); }
+  .btn.ink{ background:linear-gradient(135deg, #3a4045, var(--gray)); box-shadow:0 10px 30px rgba(63,69,74,.35); }
+
+  #flash{ position:absolute; inset:0; z-index:60; pointer-events:none; opacity:0; transition:opacity .28s; }
+  #flash.on{ opacity:1; }
+  #flash .glow{ position:absolute; inset:0; background:radial-gradient(circle at 50% 45%, rgba(201,162,39,.26), rgba(232,155,90,.16) 45%, rgba(0,0,0,0) 75%); }
+  #flash .fpaw{ position:absolute; top:42%; left:50%; width:180px; height:180px; transform:translate(-50%,-50%) scale(.4); color:var(--gold); opacity:0; filter:drop-shadow(0 0 24px var(--gold)); }
+  #flash.on .fpaw{ animation:flashPaw .55s ease forwards; }
+  @keyframes flashPaw{ 0%{ transform:translate(-50%,-50%) scale(.3); opacity:0 } 40%{ opacity:.9; transform:translate(-50%,-50%) scale(1.05) } 100%{ transform:translate(-50%,-50%) scale(1.5); opacity:0 } }
+
+  #toast{ position:absolute; left:50%; bottom:180px; transform:translate(-50%,20px); z-index:90; padding:18px 34px; border-radius:18px; background:rgba(20,22,24,.88); color:#fff; font-size:25px; letter-spacing:.04em; opacity:0; pointer-events:none; transition:opacity .35s ease, transform .35s ease; white-space:nowrap; will-change:opacity,transform; }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+
+  #soundToggle{ position:absolute; top:22px; right:18px; z-index:95; width:60px; height:60px; border-radius:50%; border:1px solid rgba(255,255,255,.3); background:rgba(0,0,0,.35); color:#fff; font-size:26px; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  #soundToggle:active{ transform:scale(.92); }
+
+  #soundPrompt{ position:absolute; left:50%; top:50%; z-index:96; width:600px; transform:translate(-50%,-50%) scale(.9); background:var(--cream); border-radius:26px; padding:40px 36px; text-align:center; opacity:0; pointer-events:none; box-shadow:0 30px 80px rgba(0,0,0,.45); transition:opacity .3s ease, transform .3s ease; border:2px solid var(--orange); }
+  #soundPrompt.show{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
+  #soundPrompt h3{ font-family:var(--serif); font-size:34px; margin-bottom:14px; color:var(--ink); }
+  #soundPrompt p{ font-size:24px; color:var(--gray); margin-bottom:26px; line-height:1.6; }
+  #soundPrompt .row{ display:flex; gap:18px; justify-content:center; }
+  #soundPrompt button{ flex:1; padding:18px 0; border-radius:999px; font-size:26px; font-weight:600; border:none; }
+  #soundPrompt .yes{ background:var(--orange); color:#fff; }
+  #soundPrompt .no{ background:#e7ddd0; color:var(--gray); }
+
+  /* ============ 页 0 加载 ============ */
+  #p0{ background:linear-gradient(180deg,#f6dfc2,#ecc79a); }
+  #p0 .safe{ align-items:center; justify-content:center; text-align:center; }
+  #loadWrap{ position:relative; width:320px; height:320px; cursor:var(--hand); }
+  #loadWrap *{ cursor:var(--hand); }
+  #loadRing{ position:absolute; inset:0; border-radius:50%; }
+  #loadRing .seg{ position:absolute; inset:-2px; border-radius:50%; background:conic-gradient(var(--orange) calc(var(--p,0)*1%), transparent 0); -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 14px), #000 calc(100% - 13px)); mask:radial-gradient(farthest-side, transparent calc(100% - 14px), #000 calc(100% - 13px)); }
+  #loadPaw{ position:absolute; inset:34px; color:#8a6a46; transition:color .3s, filter .3s; }
+  #loadPaw.ready{ color:var(--orange); filter:drop-shadow(0 0 22px rgba(232,155,90,.8)); animation:pawBreath 1.6s ease-in-out infinite; }
+  @keyframes pawBreath{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.06) } }
+  #p0 .main{ color:#3f454a; font-size:34px; letter-spacing:.12em; margin-top:44px; font-family:var(--serif); }
+  #p0 .tap{ color:rgba(63,69,74,.6); font-size:23px; margin-top:18px; letter-spacing:.3em; }
+  #p0 .foot{ position:absolute; bottom:80px; left:0; right:0; text-align:center; color:rgba(63,69,74,.5); font-size:20px; letter-spacing:.1em; }
+
+  /* ============ 页 1 封面 ============ */
+  #p1{ background:linear-gradient(180deg, rgba(20,18,15,.5), rgba(20,18,15,.62)), url('images/bg-cover.jpg') center/cover; }
+  #p1 .fog{ position:absolute; border-radius:50%; filter:blur(48px); background:rgba(245,239,230,.20); opacity:.5; will-change:transform; }
+  #p1 .fog.f1{ width:600px; height:300px; top:200px; left:-160px; animation:fog 14s ease-in-out infinite; }
+  #p1 .fog.f2{ width:500px; height:280px; top:330px; right:-120px; animation:fog 18s ease-in-out infinite reverse; }
+  #p1 .fog.f3{ width:700px; height:320px; bottom:140px; left:0; animation:fog 20s ease-in-out infinite; }
+  @keyframes fog{ 0%,100%{ transform:translateX(0) } 50%{ transform:translateX(90px) } }
+  #gate{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:900px; color:#1d2023; filter:blur(1.5px) opacity(.9); }
+  #p1 .catwalk{ position:absolute; bottom:150px; left:-220px; width:170px; color:var(--orange); will-change:transform; }
+  #p1.active .catwalk{ animation:walkBy 11s linear infinite; }
+  @keyframes walkBy{ 0%{ transform:translateX(0) } 100%{ transform:translateX(1220px) } }
+  #p1 .catwalk .bob{ animation:walkBob .5s ease-in-out infinite; transform-origin:center; transform-box:fill-box; }
+  @keyframes walkBob{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-4px) } }
+  #p1 .cover-txt{ position:absolute; left:0; right:0; top:210px; text-align:center; color:var(--cream); padding:0 60px; }
+  #p1 .cover-txt .t1{ font-size:64px; font-weight:900; text-shadow:0 6px 30px rgba(0,0,0,.6); }
+  #p1 .cover-txt .t2{ font-size:30px; margin-top:20px; letter-spacing:.1em; opacity:.9; text-shadow:0 4px 20px rgba(0,0,0,.6); }
+  #p1.active .cover-txt .t1{ animation:rise 1.4s ease both; }
+  #p1.active .cover-txt .t2{ animation:rise 1.4s .3s ease both; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(40px) } to{ opacity:1; transform:none } }
+  #p1 .enter{ position:absolute; left:50%; bottom:240px; transform:translateX(-50%); }
+  #p1 .swipehint{ position:absolute; left:0; right:0; bottom:150px; text-align:center; color:rgba(255,255,255,.55); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:.35 } 50%{ opacity:.8 } }
+  .trailpaw{ position:absolute; width:46px; height:46px; color:var(--orange); opacity:0; pointer-events:none; z-index:3; filter:drop-shadow(0 2px 4px rgba(0,0,0,.3)); animation:trailFade 2.4s ease forwards; }
+  @keyframes trailFade{ 0%{ opacity:.7; transform:scale(.5) } 100%{ opacity:0; transform:scale(.85) translateY(8px) } }
+
+  .heart{ position:absolute; z-index:20; pointer-events:none; color:#e25563; font-size:30px; animation:floatUp 1.6s ease forwards; }
+  @keyframes floatUp{ 0%{ transform:translateY(0) scale(.7); opacity:1 } 100%{ transform:translateY(-130px) scale(1.3) rotate(8deg); opacity:0 } }
+
+  /* 猫通用动画 */
+  @keyframes sunPulse{ 0%,100%{ opacity:.8 } 50%{ opacity:1 } }
+  @keyframes zzz{ 0%{ opacity:0; transform:translate(0,0) } 30%{ opacity:.8 } 100%{ opacity:0; transform:translate(10px,-26px) } }
+  @keyframes blink{ 0%,90%,100%{ transform:scaleY(1) } 93%,95%{ transform:scaleY(.12) } }
+  @keyframes earTwitch{ 0%,86%,100%{ transform:rotate(0) } 90%{ transform:rotate(-9deg) } 94%{ transform:rotate(7deg) } }
+  @keyframes tailSway{ 0%,100%{ transform:rotate(0) } 50%{ transform:rotate(6deg) } }
+  @keyframes breathe{ 0%,100%{ transform:scaleY(1) } 50%{ transform:scaleY(1.04) } }
+
+  /* ============ 页 4 转折 ============ */
+  #p4{ background:linear-gradient(180deg, rgba(20,18,15,.45), rgba(20,18,15,.6)), url('images/bg-transition.jpg') center/cover; }
+  #p4 .catup{ position:absolute; bottom:220px; left:70px; width:190px; color:var(--ink); }
+  #p4 .catup .blink{ animation:blink 3.6s infinite; }
+  #p4 .gaze{ position:absolute; left:210px; bottom:340px; width:340px; height:2px; background:linear-gradient(90deg, rgba(63,69,74,.7), transparent); transform:rotate(-40deg); transform-origin:left bottom; }
+  #p4 .plaque{ position:absolute; top:120px; left:50%; transform:translateX(-50%); width:360px; }
+  #p4 .plaque svg{ width:100%; }
+  #p4 .txt{ position:absolute; left:0; right:0; top:560px; text-align:center; color:var(--cream); padding:0 60px; }
+  #p4 .txt .l1{ font-size:30px; letter-spacing:.2em; opacity:.9; }
+  #p4 .txt .l2{ font-family:var(--serif); font-size:58px; font-weight:900; margin-top:18px; line-height:1.3; text-shadow:0 6px 30px rgba(0,0,0,.4); }
+  #p4 .txt .l3{ font-size:24px; margin-top:22px; letter-spacing:.15em; opacity:.85; }
+  #p4 .hintup{ position:absolute; left:0; right:0; bottom:150px; text-align:center; color:rgba(255,255,255,.6); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+
+  /* ============ 页 5 时间轴 ============ */
+  #p5{ background:linear-gradient(180deg, rgba(20,25,24,.5), rgba(20,25,24,.58)), url('images/timeline-bg.jpg') center/cover; }
+  #p5 .safe{ justify-content:center; }
+  #p5 .title{ text-align:center; color:var(--cream); padding:0 30px; margin-top:-40px; }
+  #p5 .title .t{ font-size:38px; font-weight:700; line-height:1.5; }
+  #p5 .title .sub{ font-size:23px; opacity:.75; margin-top:10px; letter-spacing:.15em; }
+  #p5 .track{ position:relative; height:640px; margin-top:30px; overflow:hidden; }
+  #p5 .line{ position:absolute; left:0; right:0; top:46px; height:3px; background:rgba(255,255,255,.18); }
+  #p5 .nodes{ display:flex; position:absolute; top:0; left:0; height:100%; transition:transform .5s cubic-bezier(.22,.8,.3,1); }
+  .node{ width:600px; flex:0 0 600px; position:relative; padding-top:0; }
+  .node .marker{ position:absolute; top:14px; left:50%; transform:translateX(-50%); width:66px; height:66px; color:rgba(255,255,255,.22); transition:color .4s, filter .4s, transform .4s; will-change:transform,filter; }
+  .node .marker svg{ width:100%; height:100%; }
+  .node.cur .marker{ color:var(--gold); filter:drop-shadow(0 0 12px var(--gold)); transform:translateX(-50%) scale(1.18); }
+  .node .card{ position:absolute; top:96px; left:50%; transform:translateX(-50%); width:500px; background:rgba(245,239,230,.94); border-radius:24px; padding:34px 32px; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,.35); transition:transform .35s; }
+  .node .era{ font-family:var(--serif); font-size:44px; font-weight:900; color:var(--ink); }
+  .node .year{ font-size:24px; color:var(--red); letter-spacing:.1em; margin-top:6px; }
+  .node .desc{ font-size:25px; line-height:1.65; color:#4a4a48; margin-top:18px; }
+  .node .desc .small{ display:block; margin-top:10px; font-size:22px; color:var(--gray); }
+  #p5 .swipehint{ position:absolute; left:0; right:0; bottom:130px; text-align:center; color:rgba(255,255,255,.6); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+
+  /* ============ 页 7 舍利塔 ============ */
+  #pstupa{ background:linear-gradient(180deg, rgba(20,18,15,.45), rgba(20,18,15,.6)), url('images/guta.jpg') center/cover; }
+  #pstupa .safe{ color:var(--cream); align-items:center; justify-content:center; text-align:center; }
+  #pstupa .title{ padding:0 40px; }
+  #pstupa .title .body{ color:#e7e2d8; margin-top:24px; font-size:25px; line-height:1.8; text-shadow:0 2px 14px rgba(0,0,0,.5); }
+  #pstupa .hintup{ position:absolute; left:0; right:0; bottom:150px; text-align:center; color:rgba(255,255,255,.62); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+
+  /* ============ 页 7 东传日韩 ============ */
+  #p7{ background:linear-gradient(180deg, rgba(16,20,20,.42), rgba(16,20,20,.60)), url('images/mmexport1791907095363.png') center/cover; }
+  #p7 .safe{ color:var(--cream); justify-content:center; }
+  #p7 .title{ text-align:center; }
+  #p7 .cities{ display:flex; justify-content:center; gap:16px; margin-top:auto; margin-bottom:36px; }
+  #p7 .citytag{ padding:10px 24px; border-radius:999px; background:rgba(20,22,24,.72); color:#fff; font-size:22px; letter-spacing:.06em; cursor:pointer; border:1px solid rgba(216,192,105,.5); font-family:var(--serif); }
+  #p7 .citytag:active{ transform:scale(.94); }
+  #mapTip{ position:absolute; z-index:40; background:var(--cream); color:var(--ink); border-radius:14px; padding:14px 24px; font-size:23px; box-shadow:0 14px 36px rgba(0,0,0,.4); opacity:0; transition:opacity .25s ease, transform .25s ease; pointer-events:none; white-space:nowrap; will-change:opacity; }
+  #mapTip.show{ opacity:1; }
+  #p7 .foot{ text-align:center; margin-top:0; font-size:23px; opacity:.72; letter-spacing:.08em; }
+
+  /* ============ 页 8 屡毁屡建 ============ */
+  #p8{ background:linear-gradient(180deg, rgba(20,18,15,.46), rgba(20,18,15,.62)), url('images/mmexport1791907099257.jpg') center/cover; }
+  #p8 .title{ color:var(--cream); text-align:center; margin-top:10px; }
+  #p8 .title .sub{ font-size:26px; opacity:.8; margin-top:14px; }
+  #p8 .title .body{ color:#cbd0cc; font-size:25px; margin-top:14px; }
+  #p8 .crackwrap{ position:relative; width:100%; height:600px; margin-top:26px; border-radius:20px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.5); cursor:ew-resize; }
+  #p8 .bw{ position:absolute; inset:0; background:linear-gradient(180deg,#3a3d3f,#232527); }
+  #p8 .bw .ruins{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  #p8 .color{ position:absolute; inset:0; background:linear-gradient(180deg,#d9a86a,#b9845a 55%,#8a6a48); clip-path:inset(0 0 0 var(--reveal,100%)); will-change:clip-path; }
+  #p8 .color .ruins{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  #p8 .slider{ position:absolute; top:0; bottom:0; width:4px; background:var(--gold); left:var(--reveal,100%); box-shadow:0 0 14px var(--gold); pointer-events:none; }
+  #p8 .handle{ position:absolute; top:50%; left:var(--reveal,100%); transform:translate(-50%,-50%); width:74px; height:74px; border-radius:50%; background:var(--gold); color:#3a2f14; display:flex; align-items:center; justify-content:center; font-size:30px; box-shadow:0 8px 24px rgba(0,0,0,.4); pointer-events:none; }
+  #p8 .hint{ position:absolute; left:0; right:0; bottom:120px; text-align:center; color:rgba(255,255,255,.6); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+  #p8 .catpass{ position:absolute; bottom:160px; left:-150px; width:150px; color:#b59a72; will-change:transform; }
+  #p8.active .catpass{ animation:walkBy2 16s linear infinite; }
+  @keyframes walkBy2{ 0%{ transform:translateX(0) } 100%{ transform:translateX(1050px) } }
+
+  /* ============ 猫史 ============ */
+  #pcat{ background:linear-gradient(180deg, rgba(245,239,230,.30), rgba(245,239,230,.48)), url('images/bg-cats.jpg') center/cover; }
+  #pcat .sun{ position:absolute; top:-80px; left:50%; transform:translateX(-50%); width:900px; height:480px; background:radial-gradient(circle, rgba(232,155,90,.5), transparent 62%); animation:sunPulse 5s ease-in-out infinite; }
+  #pcat .safe{ text-align:center; align-items:center; justify-content:flex-start; }
+  #pcat .title{ width:100%; margin-top:4px; color:var(--ink); }
+  #pcat .title .sub{ margin-top:16px; color:#7a5a3a; font-size:26px; }
+  #pcat .ways{ width:100%; margin-top:24px; text-align:left; }
+  #pcat .way{ display:flex; align-items:flex-start; gap:16px; margin-bottom:20px; }
+  #pcat .w-num{ flex:0 0 auto; width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,var(--orange),#d9823c); color:#fff; font-family:var(--serif); font-size:24px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 18px rgba(232,155,90,.3); }
+  #pcat .w-txt{ flex:1; font-size:24px; line-height:1.7; color:#4a3a28; padding-top:2px; }
+  #pcat .w-txt b{ display:block; font-family:var(--serif); font-size:26px; color:var(--ink); margin-bottom:2px; }
+  #pcat .scene{ position:relative; width:100%; height:430px; margin-top:18px; }
+  #pcat .qcat{ position:absolute; filter:drop-shadow(0 6px 12px rgba(0,0,0,.14)); }
+  #pcat .qcat.float{ animation:breathe 3.8s ease-in-out infinite; transform-origin:center; transform-box:fill-box; }
+  #pcat .note{ width:100%; margin-top:2px; font-size:21px; color:#8a6a46; opacity:.85; letter-spacing:.04em; }
+  #pcat .swipehint{ position:absolute; left:0; right:0; bottom:100px; text-align:center; color:rgba(122,90,58,.62); font-size:21px; letter-spacing:.14em; animation:pulse 2s infinite; }
+
+  /* ============ 页 9 今日猫猫寺 ============ */
+  #p9{ background:linear-gradient(180deg, rgba(245,239,230,.18), rgba(245,239,230,.26)), url('images/bg-today.jpg') center/cover; }
+  #p9 .safe{ text-align:center; align-items:center; }
+  #p9 .title{ margin-top:4px; color:var(--ink); }
+  #p9 .title .sub{ margin-top:14px; color:#7a5a3a; font-size:28px; }
+  #p9 .title .body{ margin-top:18px; font-size:27px; color:#5c432e; }
+  #p9 .tags{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:18px; }
+  #p9 .tags span{ padding:8px 20px; border-radius:999px; background:rgba(232,155,90,.16); color:#9a6a35; font-size:21px; letter-spacing:.04em; border:1px solid rgba(232,155,90,.42); }
+  #p9 .scene{ position:relative; width:100%; height:500px; margin-top:20px; }
+  #p9 .stele{ position:absolute; left:210px; bottom:140px; width:90px; color:#8a8072; }
+  #p9 .tourist{ position:absolute; right:110px; bottom:60px; }
+  #p9 .scene.strokezone{ cursor:var(--hand); }
+  #p9 .strokehint{ font-size:22px; color:#9a6a35; margin-top:12px; letter-spacing:.06em; animation:pulse 2s infinite; }
+  #p9 .note{ font-size:20px; color:#8a6a46; margin-top:16px; opacity:.8; letter-spacing:.05em; }
+
+  /* ============ 页 11 尾页分享 ============ */
+  #p11{ background:linear-gradient(180deg, rgba(20,18,15,.42), rgba(20,18,15,.6)), url('images/ancient.jpg') center/cover; }
+  #p11 .safe{ align-items:center; justify-content:center; text-align:center; color:var(--cream); }
+  #p11 .panorama{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:900px; color:#1a2122; opacity:.9; }
+  #p11 .cataway{ position:absolute; bottom:180px; left:760px; width:150px; color:var(--orange); will-change:transform; }
+  #p11.active .cataway{ animation:walkAway 13s linear infinite; }
+  @keyframes walkAway{ 0%{ transform:translateX(0) } 100%{ transform:translateX(-1010px) } }
+  #p11 .txt{ position:relative; z-index:2; }
+  #p11 .big{ font-family:var(--serif); font-size:60px; font-weight:900; line-height:1.4; }
+  #p11 .sub{ font-size:30px; margin-top:10px; letter-spacing:.12em; opacity:.9; }
+  #p11 .body{ color:#cbd0cc; margin-top:22px; font-size:26px; }
+  #p11 .shareprev{ width:560px; margin:30px auto 0; background:var(--cream); border-radius:20px; padding:30px 28px; color:var(--ink); position:relative; box-shadow:0 20px 50px rgba(0,0,0,.4); }
+  #p11 .shareprev .st{ font-family:var(--serif); font-size:32px; font-weight:900; }
+  #p11 .shareprev .ss{ font-size:23px; color:var(--red); margin-top:6px; letter-spacing:.08em; }
+  #p11 .shareprev .sm{ font-size:21px; color:var(--gray); margin-top:10px; }
+  #p11 .shareprev .pawmark{ position:absolute; right:24px; top:24px; width:64px; height:64px; color:var(--orange); opacity:.8; }
+  #p11 .shareprev .loc{ margin-top:14px; font-size:20px; color:var(--cyan); }
+  #p11 .btns{ display:flex; flex-direction:column; gap:18px; width:520px; margin-top:26px; z-index:2; position:relative; }
+
+  /* ============ 页 1 撸猫开场 ============ */
+  #p1 .cover-txt{ top:128px; }
+  #p1 .cover-txt .t1{ font-size:54px; }
+  #p1 .cover-txt .t2{ font-size:26px; }
+  #p1 .rubwrap{ position:absolute; left:0; right:0; top:406px; display:flex; flex-direction:column; align-items:center; }
+  #rubCat{ position:relative; width:290px; height:290px; color:var(--orange); cursor:var(--hand); filter:drop-shadow(0 18px 32px rgba(0,0,0,.28)); }
+  #rubCat *{ cursor:var(--hand); }
+  #rubCat svg{ width:100%; height:100%; }
+  #rubCat .blink{ animation:blink 3.4s infinite; }
+  #rubCat.happy{ animation:rubHappy .42s ease; }
+  @keyframes rubHappy{ 0%{ transform:scale(1) } 40%{ transform:scale(1.09) } 100%{ transform:scale(1) } }
+  #p1 .affbar{ position:relative; width:430px; height:22px; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.32); margin-top:30px; overflow:hidden; }
+  #p1 .afffill{ position:absolute; left:0; top:0; bottom:0; width:0%; background:linear-gradient(90deg,#E89B5A,#C9A227); border-radius:999px; transition:width .18s ease; box-shadow:0 0 12px rgba(232,155,90,.6); }
+  #p1 .afflabel{ margin-top:14px; color:rgba(255,255,255,.78); font-size:22px; letter-spacing:.14em; }
+  #p1 .enter{ position:absolute; left:50%; bottom:118px; transform:translateX(-50%); opacity:.32; pointer-events:none; }
+  #p1 .enter.ready{ opacity:1; pointer-events:auto; animation:enterGlow 1.3s ease infinite; }
+  @keyframes enterGlow{ 0%,100%{ box-shadow:0 10px 30px rgba(232,155,90,.35) } 50%{ box-shadow:0 12px 48px rgba(201,162,39,.9) } }
+  #p1 .foot{ position:absolute; left:0; right:0; bottom:56px; text-align:center; font-size:20px; letter-spacing:.12em; }
+
+  /* ============ 页 2 社媒（小红书风格） ============ */
+  #p2{ background:linear-gradient(180deg, rgba(20,18,15,.20), rgba(20,18,15,.30)), url('images/mmexport1791907097143.jpg') center/cover; }
+  #p2 .safe{ align-items:center; justify-content:center; }
+  .social{ width:640px; background:#fff; border-radius:22px; padding:28px 26px 26px; box-shadow:0 16px 44px rgba(0,0,0,.14); }
+  .social .head{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .social .avatar{ width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#ff6b81,#FF2442); display:flex; align-items:center; justify-content:center; color:#fff; font-size:28px; box-shadow:0 4px 10px rgba(255,36,66,.28); }
+  .social .uname{ color:#1a1a1a; font-size:25px; font-weight:700; }
+  .social .subname{ color:#999; font-size:19px; }
+  .social .follow{ margin-left:auto; padding:6px 20px; border-radius:999px; background:#FF2442; color:#fff; font-size:20px; font-weight:600; }
+  .social .topic{ color:#1e80ff; font-size:26px; font-weight:600; margin-bottom:16px; }
+  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-bottom:18px; }
+  .grid .cell{ aspect-ratio:1; border-radius:8px; overflow:hidden; position:relative; background:#f0f0f2; }
+  .grid .cell svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .grid .cell img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .social .actions{ display:flex; align-items:center; gap:34px; color:#9aa0a6; font-size:23px; margin-bottom:20px; }
+  .social .actions .ic{ cursor:pointer; transition:transform .15s; display:flex; align-items:center; gap:6px; }
+  .social .actions .ic.liked{ color:#FF2442; }
+  .social .actions .ic:active{ transform:scale(1.3); }
+  #p2 .openbtn{ width:100%; margin-top:6px; background:linear-gradient(135deg,#FF2442,#ff5470); box-shadow:0 8px 22px rgba(255,36,66,.35); }
+
+  /* ============ 页 5 猫猫石像过渡 ============ */
+  #pstatue{ background:linear-gradient(180deg, rgba(20,18,15,.42), rgba(20,18,15,.6)), url('images/statue-transition.jpg') center/cover; }
+  #pstatue .safe{ align-items:center; justify-content:center; text-align:center; color:var(--cream); }
+  #pstatue .txt{ padding:0 52px; }
+  #pstatue .txt .l1{ font-size:24px; letter-spacing:.12em; opacity:.86; }
+  #pstatue .txt .l2{ font-family:var(--serif); font-size:46px; font-weight:900; margin-top:20px; line-height:1.4; text-shadow:0 6px 30px rgba(0,0,0,.55); }
+  #pstatue .txt .l3{ font-size:24px; line-height:1.75; margin-top:26px; opacity:.92; text-shadow:0 2px 14px rgba(0,0,0,.5); }
+  #pstatue .hintup{ position:absolute; left:0; right:0; bottom:150px; text-align:center; color:rgba(255,255,255,.62); font-size:22px; letter-spacing:.15em; animation:pulse 2s infinite; }
+  #pstatue .offering{ position:absolute; left:0; right:0; bottom:224px; display:flex; justify-content:center; align-items:flex-end; gap:24px; pointer-events:none; }
+  #pstatue .offering .item{ display:flex; flex-direction:column; align-items:center; filter:drop-shadow(0 8px 12px rgba(0,0,0,.38)); }
+  #pstatue .offering .item svg{ display:block; }
+  #pstatue .offering .plate{ width:74px; height:16px; margin-top:2px; border-radius:50%; background:radial-gradient(ellipse at 50% 40%, rgba(245,239,230,.34), rgba(245,239,230,.08) 70%); border:1px solid rgba(245,239,230,.22); }
+  #pstatue .offering .item.float{ animation:offerFloat 3.6s ease-in-out infinite; }
+  #pstatue .offering .item.float.d2{ animation-delay:.5s; }
+  #pstatue .offering .item.float.d3{ animation-delay:1s; }
+  #pstatue .offering .item.float.d4{ animation-delay:1.5s; }
+  @keyframes offerFloat{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-7px) } }
+
+  /* ============ 新增：走动 / 晒太阳 / 随机图 / 喂猫充实 ============ */
+  @keyframes stroll{ 0%{ left:-170px } 100%{ left:900px } }
+  #p1 .catwalk .bob, #pcat .s3 .bob, #p8 .catpass .bob, #p11 .cataway .bob{ animation:walkBob .5s ease-in-out infinite; transform-origin:center; transform-box:fill-box; }
+  #pcat .sunbeam{ position:absolute; left:300px; bottom:120px; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle, rgba(232,155,90,.55), rgba(232,155,90,0) 70%); pointer-events:none; }
+
+  .randmedia{ position:absolute; border-radius:16px; overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.45); border:3px solid #fff; background:#fff; z-index:6; pointer-events:none; opacity:0; scale:.5; translate:0 0; will-change:transform,opacity; transition:opacity .4s ease, scale .45s cubic-bezier(.22,.8,.3,1), translate .5s ease; }
+  .randmedia.show{ opacity:1; scale:1; }
+  .randmedia.out{ opacity:0; scale:.85; translate:0 26px; }
+  .randmedia img, .randmedia video{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* 无障碍：用户偏好减少动态时关闭动画 */
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    .page{ transform:none; }
+  }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <!-- SVG 素材库 -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="paw" viewBox="0 0 100 100">
+        <ellipse cx="30" cy="42" rx="11" ry="14" fill="currentColor" transform="rotate(-18 30 42)"/>
+        <ellipse cx="46" cy="30" rx="11" ry="14" fill="currentColor" transform="rotate(-6 46 30)"/>
+        <ellipse cx="54" cy="30" rx="11" ry="14" fill="currentColor" transform="rotate(6 54 30)"/>
+        <ellipse cx="70" cy="42" rx="11" ry="14" fill="currentColor" transform="rotate(18 70 42)"/>
+        <path d="M50 52 C33 52 24 66 24 79 C24 90 36 98 50 98 C64 98 76 90 76 79 C76 66 67 52 50 52 Z" fill="currentColor"/>
+      </symbol>
+
+      <!-- 精细猫：正面坐姿 -->
+      <symbol id="cat-sit" viewBox="0 0 150 150">
+        <path d="M38 132 C22 132 20 118 30 110 C36 105 44 108 46 116" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        <path d="M32 150 C32 102 46 88 75 88 C104 88 118 102 118 150 Z" fill="currentColor"/>
+        <ellipse cx="75" cy="128" rx="26" ry="16" fill="#F5EFE6" opacity="0.9"/>
+        <path d="M42 104 C46 112 46 120 44 128 M58 98 C62 108 62 118 60 128 M92 98 C88 108 88 118 90 128 M108 104 C104 112 104 120 106 128" stroke="rgba(0,0,0,0.14)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M54 136 C54 131 58 129 64 129 L66 150 L52 150 Z" fill="currentColor"/>
+        <path d="M96 136 C96 131 92 129 86 129 L84 150 L98 150 Z" fill="currentColor"/>
+        <path d="M58 150 L58 139 M64 150 L64 139 M86 150 L86 139 M92 150 L92 139" stroke="rgba(0,0,0,0.18)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="75" cy="56" r="36" fill="currentColor"/>
+        <path d="M63 33 l0 -7 M75 31 l0 -8 M87 33 l0 -7" stroke="rgba(0,0,0,0.13)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M44 40 L38 12 L68 30 Z" fill="currentColor"/>
+        <path d="M106 40 L112 12 L82 30 Z" fill="currentColor"/>
+        <path class="ear-twig" d="M47 36 L43 18 L60 30 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M103 36 L107 18 L90 30 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M60 40 L66 50 L72 44 L78 50 L84 40" stroke="rgba(0,0,0,0.16)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M42 60 L48 62 M44 70 L50 70 M108 60 L102 62 M106 70 L100 70" stroke="rgba(0,0,0,0.14)" stroke-width="3" stroke-linecap="round"/>
+        <g class="blink">
+          <ellipse cx="62" cy="60" rx="8" ry="10" fill="#2b2f33"/>
+          <circle cx="64" cy="57" r="3" fill="#fff"/>
+          <ellipse cx="88" cy="60" rx="8" ry="10" fill="#2b2f33"/>
+          <circle cx="90" cy="57" r="3" fill="#fff"/>
+        </g>
+        <path d="M71 74 L79 74 L75 81 Z" fill="#B23A2E"/>
+        <path d="M75 81 C70 87 64 85 63 80 M75 81 C80 87 86 85 87 80" stroke="#3F454A" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <ellipse cx="54" cy="72" rx="7" ry="4" fill="#B23A2E" opacity="0.18"/>
+        <ellipse cx="96" cy="72" rx="7" ry="4" fill="#B23A2E" opacity="0.18"/>
+        <path d="M50 76 L34 74 M50 82 L34 84 M100 76 L116 74 M100 82 L116 84" stroke="rgba(63,69,74,0.55)" stroke-width="2.4" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- 精细猫：卧姿晒太阳 -->
+      <symbol id="cat-lie" viewBox="0 0 180 100">
+        <ellipse cx="90" cy="66" rx="70" ry="24" fill="currentColor"/>
+        <ellipse cx="80" cy="72" rx="40" ry="10" fill="#F5EFE6" opacity="0.25"/>
+        <path d="M104 52 C120 52 126 62 122 70 M128 60 C142 60 146 70 142 78" stroke="rgba(0,0,0,0.14)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M20 66 C8 66 4 52 14 46" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <circle cx="150" cy="48" r="20" fill="currentColor"/>
+        <path d="M136 34 L135 16 L150 30 Z" fill="currentColor"/>
+        <path d="M153 30 L166 20 L165 36 Z" fill="currentColor"/>
+        <path d="M139 30 L138 20 L147 28 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M156 28 L164 24 L162 32 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M144 40 L150 46 L158 38" stroke="rgba(0,0,0,0.16)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="blink">
+          <path d="M146 48 q3 3.5 7 0" stroke="#3F454A" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        </g>
+        <path d="M162 54 l2 2.2 l-4 0 Z" fill="#B23A2E"/>
+        <path d="M164 56 l-6 1 M164 59 l-6 3" stroke="rgba(63,69,74,0.5)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M144 66 l8 8 M150 66 l8 8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+        <path d="M150 72 l2 6 M156 72 l2 6" stroke="rgba(0,0,0,0.15)" stroke-width="2.4" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- 精细猫：翻肚皮 -->
+      <symbol id="cat-belly" viewBox="0 0 150 150">
+        <ellipse cx="75" cy="78" rx="50" ry="34" fill="currentColor"/>
+        <ellipse cx="75" cy="80" rx="30" ry="20" fill="#F5EFE6" opacity="0.9"/>
+        <path d="M30 70 C20 84 24 100 36 104" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path class="tail-twig" d="M36 104 C40 108 46 106 48 100" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <circle cx="75" cy="38" r="22" fill="currentColor"/>
+        <path d="M56 24 L54 6 L72 20 Z" fill="currentColor"/>
+        <path d="M94 24 L96 6 L78 20 Z" fill="currentColor"/>
+        <path d="M58 21 L57 11 L68 18 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M92 21 L93 11 L82 18 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M66 22 L71 28 L76 22 M71 28 L75 32 L79 28" stroke="rgba(0,0,0,0.15)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="blink">
+          <path d="M64 36 q3 3.5 7 0 M80 36 q3 3.5 7 0" stroke="#3F454A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <path d="M72 44 L78 44 L75 49 Z" fill="#B23A2E"/>
+        <path d="M75 49 C71 53 66 52 65 48 M75 49 C79 53 84 52 85 48" stroke="#3F454A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <ellipse cx="55" cy="46" rx="6" ry="3.5" fill="#B23A2E" opacity="0.18"/>
+        <ellipse cx="95" cy="46" rx="6" ry="3.5" fill="#B23A2E" opacity="0.18"/>
+        <path d="M42 64 q-8 -16 4 -20 M108 64 q8 -16 -4 -20 M52 78 q-6 -14 6 -18 M98 78 q6 -14 -6 -18" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+        <path d="M40 46 l-2 6 M47 44 l-2 6" stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- 精细猫：行走 -->
+      <symbol id="cat-walk" viewBox="0 0 190 100">
+        <path d="M38 62 C18 60 10 40 22 28" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <ellipse cx="100" cy="64" rx="62" ry="22" fill="currentColor"/>
+        <ellipse cx="92" cy="70" rx="40" ry="9" fill="#F5EFE6" opacity="0.25"/>
+        <path d="M62 50 C66 58 66 66 64 74 M80 46 C84 54 84 62 82 70 M118 46 C122 54 122 62 120 70 M136 50 C140 58 140 66 138 74" stroke="rgba(0,0,0,0.14)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="164" cy="46" r="19" fill="currentColor"/>
+        <path d="M150 32 L150 14 L164 28 Z" fill="currentColor"/>
+        <path d="M166 28 L180 16 L179 34 Z" fill="currentColor"/>
+        <path d="M153 28 L152 20 L160 26 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M168 26 L176 22 L174 30 Z" fill="#F5EFE6" opacity="0.55"/>
+        <g class="blink">
+          <path d="M164 44 q3 3.5 7 0" stroke="#3F454A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <path d="M176 52 l2 2 l-4 0 Z" fill="#B23A2E"/>
+        <path d="M178 54 l-6 1" stroke="rgba(63,69,74,0.5)" stroke-width="2" stroke-linecap="round"/>
+        <g class="bob">
+          <path d="M70 80 l-6 14 M76 80 l-4 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </g>
+        <g class="bob" style="animation-delay:.25s">
+          <path d="M124 80 l-5 14 M130 80 l-3 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </g>
+        <path d="M64 94 l8 0 M120 94 l8 0" stroke="rgba(0,0,0,0.15)" stroke-width="2.4" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- 精细猫：抬头仰望 -->
+      <symbol id="cat-up" viewBox="0 0 150 160">
+        <path d="M24 160 C26 112 46 98 70 98 L92 98 C106 98 112 108 112 130 C112 150 104 160 92 160 Z" fill="currentColor"/>
+        <path d="M26 158 C4 158 0 128 16 112" stroke="currentColor" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M40 128 C38 144 38 152 44 158 L70 158 C70 148 68 128 60 128 Z" fill="currentColor"/>
+        <circle cx="116" cy="70" r="24" fill="currentColor"/>
+        <path d="M98 56 L96 30 L116 50 Z" fill="currentColor"/>
+        <path d="M120 50 L142 40 L140 64 Z" fill="currentColor"/>
+        <path d="M102 50 L101 38 L113 48 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M122 48 L134 44 L132 56 Z" fill="#F5EFE6" opacity="0.55"/>
+        <path d="M104 46 C108 40 116 36 124 40" stroke="rgba(0,0,0,0.15)" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <g class="blink">
+          <path d="M112 64 q3.5 -3.5 8 0" stroke="#3F454A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <path d="M122 80 l2.6 2.8 l-5.2 0 Z" fill="#B23A2E"/>
+        <path d="M124 84 l-8 1 M124 87 l-8 3" stroke="rgba(63,69,74,0.5)" stroke-width="2" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- 精细猫石像 -->
+      <symbol id="cat-statue" viewBox="0 0 150 150">
+        <path d="M38 132 C22 132 20 118 30 110 C36 105 44 108 46 116" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        <path d="M32 150 C32 102 46 88 75 88 C104 88 118 102 118 150 Z" fill="currentColor"/>
+        <path d="M54 136 C54 131 58 129 64 129 L66 150 L52 150 Z" fill="currentColor"/>
+        <path d="M96 136 C96 131 92 129 86 129 L84 150 L98 150 Z" fill="currentColor"/>
+        <circle cx="75" cy="56" r="36" fill="currentColor"/>
+        <path d="M44 40 L38 12 L68 30 Z" fill="currentColor"/>
+        <path d="M106 40 L112 12 L82 30 Z" fill="currentColor"/>
+        <path d="M58 62 q4 4 8 0 M84 62 q4 4 8 0" stroke="#3F454A" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        <path d="M71 76 L79 76 L75 83 Z" fill="#3F454A"/>
+        <path d="M75 83 C70 88 65 86 64 81 M75 83 C80 88 85 86 86 81" stroke="#3F454A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M50 78 L36 76 M50 84 L36 86 M100 78 L114 76 M100 84 L114 86" stroke="rgba(63,69,74,0.5)" stroke-width="2.2" stroke-linecap="round"/>
+        <ellipse cx="80" cy="40" rx="14" ry="8" fill="#C9A227" opacity="0.85"/>
+        <ellipse cx="58" cy="34" rx="5" ry="3.5" fill="#C9A227" opacity="0.6"/>
+        <path d="M46 40 C40 52 40 60 46 64" stroke="#C9A227" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- Q版猫：大头小身体，圆润可爱 -->
+      <symbol id="cat-chibi" viewBox="0 0 140 140">
+        <path d="M38 42 L40 14 L62 32 Z" fill="currentColor"/>
+        <path d="M102 42 L100 14 L78 32 Z" fill="currentColor"/>
+        <path d="M42 38 L44 24 L56 34 Z" fill="#F5EFE6" opacity=".65"/>
+        <path d="M98 38 L96 24 L84 34 Z" fill="#F5EFE6" opacity=".65"/>
+        <path d="M40 122 C40 96 52 86 70 86 C88 86 100 96 100 122 Z" fill="currentColor"/>
+        <circle cx="70" cy="60" r="42" fill="currentColor"/>
+        <path d="M58 32 L58 24 M70 30 L70 22 M82 32 L82 24" stroke="rgba(0,0,0,.13)" stroke-width="3" stroke-linecap="round"/>
+        <g class="blink">
+          <circle cx="56" cy="62" r="7" fill="#2b2f33"/>
+          <circle cx="84" cy="62" r="7" fill="#2b2f33"/>
+          <circle cx="58" cy="59" r="2.6" fill="#fff"/>
+          <circle cx="86" cy="59" r="2.6" fill="#fff"/>
+        </g>
+        <ellipse cx="46" cy="74" rx="6" ry="3.6" fill="#B23A2E" opacity=".22"/>
+        <ellipse cx="94" cy="74" rx="6" ry="3.6" fill="#B23A2E" opacity=".22"/>
+        <path d="M70 68 L70 72 M70 72 L64 75 M70 72 L76 75" stroke="#3F454A" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <ellipse cx="54" cy="124" rx="11" ry="7" fill="currentColor"/>
+        <ellipse cx="86" cy="124" rx="11" ry="7" fill="currentColor"/>
+      </symbol>
+
+      <symbol id="stupa" viewBox="0 0 160 220">
+        <rect x="30" y="180" width="100" height="16" rx="4" fill="currentColor"/>
+        <rect x="44" y="160" width="72" height="24" rx="6" fill="currentColor"/>
+        <path d="M80 40 C52 60 44 100 44 118 L116 118 C116 100 108 60 80 40 Z" fill="currentColor"/>
+        <rect x="72" y="28" width="16" height="12" fill="currentColor"/>
+        <path d="M76 28 L84 28 L82 14 L78 14 Z" fill="currentColor"/>
+        <circle cx="80" cy="10" r="4" fill="currentColor"/>
+        <path d="M80 90 C74 90 72 100 72 108 L88 108 C88 100 86 90 80 90 Z" fill="#F5EFE6" opacity=".8"/>
+      </symbol>
+      <symbol id="plaque" viewBox="0 0 320 90">
+        <rect x="8" y="8" width="304" height="74" rx="6" fill="#3F454A"/>
+        <rect x="16" y="16" width="288" height="58" rx="4" fill="none" stroke="#C9A227" stroke-width="2"/>
+        <text x="160" y="60" text-anchor="middle" font-size="42" fill="#C9A227" font-family="'Noto Serif SC',serif" font-weight="700">大兴善寺</text>
+      </symbol>
+      <symbol id="eaves" viewBox="0 0 600 160">
+        <path d="M20 140 L90 62 C120 42 150 38 180 32 L420 32 C450 38 480 42 510 62 L580 140 Z" fill="currentColor"/>
+        <path d="M64 140 L114 82 L486 82 L536 140 Z" fill="currentColor" opacity=".55"/>
+        <path d="M20 140 C8 120 16 104 40 110 C30 120 24 132 30 140 Z" fill="currentColor"/>
+        <path d="M580 140 C592 120 584 104 560 110 C570 120 576 132 570 140 Z" fill="currentColor"/>
+      </symbol>
+      <symbol id="ruins" viewBox="0 0 520 300">
+        <path d="M60 250 L60 150 L100 150 L100 190 L120 190 L120 140 L170 140 L170 250 Z" fill="currentColor"/>
+        <path d="M250 250 L250 120 L290 120 L290 170 L320 170 L320 250 Z" fill="currentColor"/>
+        <path d="M420 250 L420 170 L450 170 L450 140 L490 140 L490 250 Z" fill="currentColor"/>
+        <rect x="40" y="250" width="480" height="20" fill="currentColor" opacity=".7"/>
+        <path d="M120 190 L120 210 M120 200 L150 200" stroke="#000" stroke-width="2" opacity=".2"/>
+      </symbol>
+
+      <!-- 贡品食物：小鱼 / 苹果 / 橘子 / 馒头 -->
+      <symbol id="food-fish" viewBox="0 0 120 70">
+        <path d="M12 35 C28 13 64 9 86 22 L100 35 L86 48 C64 61 28 57 12 35 Z" fill="#E89B5A"/>
+        <path d="M100 35 L120 27 L114 35 L120 43 Z" fill="#d9823c"/>
+        <circle cx="33" cy="30" r="3.2" fill="#3F454A"/>
+        <path d="M20 41 C30 46 40 46 50 43" stroke="#B23A2E" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M56 22 C60 26 60 30 58 34 M66 19 C70 23 70 27 68 31" stroke="#d9823c" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="food-apple" viewBox="0 0 100 100">
+        <path d="M50 36 C30 36 24 56 29 70 C34 82 66 82 71 70 C76 56 70 36 50 36 Z" fill="#C94A3A"/>
+        <path d="M50 36 C50 26 45 18 40 12" stroke="#5a3a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M48 15 C55 11 63 13 67 19 C63 21 57 21 54 19 Z" fill="#7a9b4a"/>
+      </symbol>
+      <symbol id="food-orange" viewBox="0 0 100 100">
+        <circle cx="50" cy="60" r="33" fill="#F0A24A"/>
+        <path d="M50 28 C44 20 38 16 42 12" stroke="#5a3a2a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M50 28 C56 20 62 16 58 12" stroke="#5a3a2a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M52 26 C56 24 60 25 62 28 C61 30 58 31 55 30 Z" fill="#7a9b4a"/>
+        <circle cx="50" cy="56" r="3" fill="#d9823c"/>
+      </symbol>
+      <symbol id="food-bun" viewBox="0 0 100 100">
+        <path d="M27 60 C27 42 38 34 50 34 C62 34 73 42 73 60 L73 84 L27 84 Z" fill="#F5EFE6"/>
+        <path d="M27 60 C38 46 62 46 73 60" stroke="#e0d2ba" stroke-width="3" fill="none"/>
+        <path d="M40 40 C42 36 46 34 50 34 C54 34 58 36 60 40" stroke="#e0d2ba" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div id="stage">
+    <div id="pawbar"></div>
+
+    <div id="pages">
+      <section class="page" data-page="0" id="p0">
+        <div class="safe">
+          <div id="loadWrap">
+            <div id="loadRing"><div class="seg"></div></div>
+            <svg id="loadPaw" viewBox="0 0 100 100"><use href="#paw"/></svg>
+          </div>
+          <div class="main">正在进入猫猫寺……</div>
+          <div class="tap" id="loadTap">请轻触爪印</div>
+        </div>
+        <div class="foot">大兴善寺 · 猫是入口，历史是底色</div>
+      </section>
+
+      <section class="page" data-page="1" id="p1">
+        <div class="fog f1"></div><div class="fog f2"></div><div class="fog f3"></div>
+        <svg id="gate" viewBox="0 0 600 160"><use href="#eaves"/></svg>
+        <div class="cover-txt">
+          <div class="t1 serif">一只猫，<br>把你领到一座千年古寺。</div>
+          <div class="t2">它叫大兴善寺，大家都叫它「猫猫寺」。先撸一撸，再进去。</div>
+        </div>
+        <div class="rubwrap">
+          <div id="rubCat"><svg viewBox="0 0 150 150"><use href="#cat-sit"/></svg></div>
+          <div class="affbar"><div class="afffill" id="affFill"></div></div>
+          <div class="afflabel">好感度</div>
+        </div>
+        <button class="btn enter" id="enterBtn" data-goto="2">猫带你进寺 →</button>
+        <div class="foot" style="color:rgba(255,255,255,.4)">猫是入口，历史是底色</div>
+      </section>
+
+      <section class="page" data-page="2" id="p2">
+        <div class="safe">
+          <div class="social">
+            <div class="head">
+              <div class="avatar">🐱</div>
+              <div><div class="uname">猫猫寺观察员</div><div class="subname">📍 大兴善寺</div></div>
+              <div class="follow">关注</div>
+            </div>
+            <div class="topic">#大兴善寺猫猫寺#</div>
+            <div class="grid" id="grid">
+              <div class="cell"><img src="images/grid-1.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-2.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-3.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-4.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-5.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-6.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-7.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-8.jpg" alt="" loading="lazy" decoding="async"></div>
+              <div class="cell"><img src="images/grid-9.jpg" alt="" loading="lazy" decoding="async"></div>
+            </div>
+            <div class="body" style="color:#1a1a1a;font-size:24px;margin-bottom:8px">很多人第一次来大兴善寺，是因为一只猫。</div>
+            <div class="small" style="color:#9aa0a6;margin-bottom:18px">而这些猫，却不是一直都在。</div>
+            <div class="actions">
+              <span class="ic" id="likeBtn">♡ <b id="likeNum">2.3万</b></span>
+              <span class="ic" id="saveBtn">☆ <b>收藏</b></span>
+              <span class="ic">💬 <b>评论</b></span>
+              <span class="ic">↗ <b>分享</b></span>
+            </div>
+            <button class="btn openbtn" data-goto="3">展开看看</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="3" id="pcat">
+        <div class="sun"></div>
+        <div class="safe">
+          <div class="title">
+            <div class="title-lg serif">猫，到底是怎么来到寺里的。</div>
+            <div class="sub">最合理的，大概就三种。</div>
+          </div>
+          <div class="ways">
+            <div class="way">
+              <div class="w-num">01</div>
+              <div class="w-txt"><b>自己溜进来的</b>最早的几只，没人记得是什么时候来的，多半是逛着逛着就进了山门。僧人见其可怜，就在墙根下放了点吃的，第二天它又来了。</div>
+            </div>
+            <div class="way">
+              <div class="w-num">02</div>
+              <div class="w-txt"><b>被人丢在门口的</b>还有不少是被人遗弃的。他们把宠物往门口一放，人就走了。僧人只好收留了它们。</div>
+            </div>
+            <div class="way">
+              <div class="w-num">03</div>
+              <div class="w-txt"><b>在这里出生的</b>再后来，猫在这儿安了家，生了小猫，小猫又生小猫。</div>
+            </div>
+          </div>
+          <div class="scene">
+            <div class="sunbeam"></div>
+            <svg class="qcat float" style="left:52px; bottom:150px; width:118px; color:#E89B5A" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat" style="left:176px; bottom:64px; width:96px; color:#c98a3f" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat float" style="left:322px; bottom:54px; width:124px; color:#8a5a3a" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat" style="left:468px; bottom:108px; width:100px; color:#E89B5A" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat float" style="left:566px; bottom:178px; width:110px; color:#c98a3f" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat" style="left:236px; bottom:236px; width:88px; color:#b98a5a" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+            <svg class="qcat float" style="left:420px; bottom:250px; width:92px; color:#d98a3f" viewBox="0 0 140 140"><use href="#cat-chibi"/></svg>
+          </div>
+          <div class="note">它们晒太阳、听经、打盹，成了这座古寺里最鲜活的一页。</div>
+          <div class="swipehint">上滑继续</div>
+        </div>
+      </section>
+
+      <section class="page" data-page="4" id="pstatue">
+        <div class="safe">
+          <div class="txt">
+            <div class="l1">这是后来修建的猫猫石像。</div>
+            <div class="l2">但它的意义不在于佛教教义。</div>
+            <div class="l3">而在于提供了一个让大众亲近古寺、了解古寺历史的低门槛入口。</div>
+          </div>
+        </div>
+        <div class="offering">
+          <div class="item float" style="width:86px"><svg viewBox="0 0 120 70"><use href="#food-fish"/></svg><div class="plate"></div></div>
+          <div class="item float d2" style="width:64px"><svg viewBox="0 0 100 100"><use href="#food-orange"/></svg><div class="plate"></div></div>
+          <div class="item float d3" style="width:66px"><svg viewBox="0 0 100 100"><use href="#food-apple"/></svg><div class="plate"></div></div>
+          <div class="item float d4" style="width:64px"><svg viewBox="0 0 100 100"><use href="#food-bun"/></svg><div class="plate"></div></div>
+          <div class="item float d2" style="width:86px"><svg viewBox="0 0 120 70" style="transform:scaleX(-1)"><use href="#food-fish"/></svg><div class="plate"></div></div>
+        </div>
+        <div class="hintup">上滑，走进它的历史</div>
+      </section>
+
+      <section class="page" data-page="5" id="p4">
+        <svg class="plaque" viewBox="0 0 320 90"><use href="#plaque"/></svg>
+        <div class="gaze"></div>
+        <svg class="catup" viewBox="0 0 150 160"><use href="#cat-up"/></svg>
+        <div class="txt">
+          <div class="l1">但猫，顶多把你送到门口。</div>
+          <div class="l2">抬头，<br>看见大兴善寺。</div>
+          <div class="l3">僧人收留了猫，猫把你带了过来。你抬头一看，才发现这寺已经站了一千多年。</div>
+        </div>
+        <div class="hintup">上滑，走进它的历史</div>
+      </section>
+
+      <section class="page" data-page="6" id="p5">
+        <div class="safe">
+          <div class="title">
+            <div class="t">你为猫而来，<br>猫的背后，其实是一座一千多年的老寺。</div>
+            <div class="sub">左右滑一滑，点亮时间，看看它是怎么走到今天。</div>
+          </div>
+          <div class="track" id="track">
+            <div class="line"></div>
+            <div class="nodes" id="nodes"></div>
+          </div>
+          <div class="swipehint">左右滑动 · 点击节点聚焦</div>
+        </div>
+      </section>
+
+      <section class="page" data-page="7" id="pstupa">
+        <div class="safe">
+          <div class="title">
+            <div class="title-lg serif">舍利塔，藏着隋唐的风。</div>
+            <div class="body">舍利塔，是用来供奉佛舍利的宝塔。隋文帝崇信佛法，曾把佛舍利分送天下名刹，大兴善寺作为都城最大的译经道场，也在寺中起塔供奉。塔身层层收分、庄重内敛，千年来静静立在寺中，是寺里最古老、也最安静的建筑之一。</div>
+            <div class="body" style="margin-top:16px">如今，寺里的猫最喜欢在塔前晒太阳、打盹，把这座千年古塔，睡成了最日常的风景。</div>
+          </div>
+        </div>
+        <div class="hintup">上滑，继续走进它的历史</div>
+      </section>
+
+      <section class="page" data-page="8" id="p7">
+        <div class="safe">
+          <div class="title">
+            <div class="title-lg serif">法脉，从这里出发。</div>
+            <div class="body" style="color:#f0ece2;margin-top:14px">经不空—惠果—空海，密宗东传日本，<br>也远播韩国。大兴善寺，被尊为祖庭。</div>
+          </div>
+          <div class="cities">
+            <span class="citytag" id="cityChangan">长安</span>
+            <span class="citytag" id="cityJapan">日本</span>
+            <span class="citytag" id="cityKorea">韩国</span>
+          </div>
+          <div class="foot">点击下方地点 · 查看东传脉络</div>
+        </div>
+        <div id="mapTip"></div>
+      </section>
+
+      <section class="page" data-page="9" id="p8">
+        <div class="safe">
+          <div class="title">
+            <div class="title-lg serif">会昌法难，它被毁。</div>
+            <div class="sub">明清重修，屡毁屡建。</div>
+            <div class="body">但钟鼓楼一直在，香火也从未断过。</div>
+          </div>
+          <div class="crackwrap" id="crackwrap">
+            <div class="bw"><img class="ruins" src="images/ruins-left.jpg" alt="古"></div>
+            <div class="color"><img class="ruins" src="images/new.jpg" alt="新"></div>
+            <div class="slider"></div>
+            <div class="handle">⟷</div>
+          </div>
+          <div class="hint">滑动，让时间重组</div>
+          <svg class="catpass" viewBox="0 0 190 100"><use href="#cat-walk"/></svg>
+        </div>
+      </section>
+
+      <section class="page" data-page="10" id="p9">
+        <div class="safe">
+          <div class="title">
+            <div class="title-lg serif">今天，猫在碑刻旁打盹。</div>
+            <div class="sub">在舍利塔前晒太阳，渴了就自己去拧开水龙头。</div>
+            <div class="body">寺里的猫有几十只了。以前这寺挺清静，来的人不多；现在，年轻人扛着相机来找猫，游客排着队等猫露面。猫，成了大兴善寺最出圈的招牌。</div>
+            <div class="tags"><span>#西安打卡</span><span>#排队看猫</span><span>#猫猫寺</span></div>
+          </div>
+          <div class="scene strokezone" id="strokeZone">
+            <svg class="stele" viewBox="0 0 90 120"><rect x="20" y="10" width="50" height="104" rx="6" fill="currentColor"/><path d="M26 22 L64 22 M26 40 L64 40 M26 58 L64 58" stroke="#F5EFE6" stroke-width="4"/></svg>
+            <div class="tourist">
+              <svg viewBox="0 0 60 100"><circle cx="30" cy="18" r="12" fill="#5b4a3a"/><path d="M30 30 C20 55 18 72 22 90 L38 90 C42 72 40 55 30 30 Z" fill="#4a5a5c"/><path d="M22 90 L30 66 L38 90" fill="#6b6b6b"/></svg>
+            </div>
+          </div>
+          <div class="strokehint">在画面中间轻轻抚摸，看看会浮现出什么</div>
+          <button class="btn red" data-goto="11">继续</button>
+          <div class="note">* 抚摸中间，会随机浮现猫猫寺的日常瞬间。</div>
+        </div>
+      </section>
+
+      <section class="page" data-page="11" id="p11">
+        <svg class="panorama" viewBox="0 0 600 160"><use href="#eaves"/></svg>
+        <div class="safe">
+          <div class="txt">
+            <div class="big">猫是入口，<br>历史是底色。</div>
+            <div class="sub">大兴善寺。</div>
+            <div class="body">你为猫而来，抬头看见一座祖庭。寺收留了猫，猫也把今天的热闹，带回了这座千年老寺。</div>
+          </div>
+          <div class="shareprev" id="sharePrev">
+            <div class="st">猫是入口，历史是底色。</div>
+            <div class="ss">大兴善寺 · 猫猫寺</div>
+            <div class="sm">从一只猫，走进一座祖庭。</div>
+            <div class="loc">📍 大兴善寺</div>
+          </div>
+          <div class="btns">
+            <button class="btn" id="genCard">生成分享卡</button>
+            <button class="btn ink" id="shareBtn">分享这份底色</button>
+            <button class="btn ghost" id="restartBtn">重新开始</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="flash"><div class="glow"></div><svg class="fpaw" viewBox="0 0 100 100"><use href="#paw"/></svg></div>
+
+    <button id="soundToggle">🔇</button>
+    <div id="soundPrompt">
+      <h3>开启音效？</h3>
+      <p>风铃、钟声、古琴与猫叫，<br>让这段旅程更有温度。</p>
+      <div class="row">
+        <button class="yes" id="soundYes">开启</button>
+        <button class="no" id="soundNo">保持静音</button>
+      </div>
+    </div>
+    <div id="toast"></div>
+  </div>
+</div>
+
+<script>
+/* ============================ 工具 ============================ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ============================ 缩放 ============================ */
+const stage = $('#stage');
+function fit(){ const s = Math.min(innerWidth/750, innerHeight/1334); stage.style.transform = `translate(-50%,-50%) scale(${s})`; }
+let fitRaf=null;
+addEventListener('resize', ()=>{ if(fitRaf) cancelAnimationFrame(fitRaf); fitRaf=requestAnimationFrame(fit); });
+addEventListener('orientationchange', ()=>setTimeout(fit,120)); fit();
+
+/* 视口坐标 → 舞台坐标 */
+function stageXY(e){ const r=stage.getBoundingClientRect(); return { x:(e.clientX-r.left)/r.width*750, y:(e.clientY-r.top)/r.height*1334 }; }
+
+/* ============================ 音效引擎 ============================ */
+const Audio = (() => {
+  let ctx=null, master=null, enabled=false;
+  function ensure(){
+    if(!ctx){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false; ctx=new AC(); master=ctx.createGain(); master.gain.value=0.8; master.connect(ctx.destination); }
+    if(ctx.state==='suspended') ctx.resume(); return true;
+  }
+  function setEnabled(v){ enabled=v; if(v) ensure(); }
+  function tone(o){
+    if(!enabled || !ensure()) return;
+    const t0=ctx.currentTime+(o.delay||0);
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type=o.type||'sine'; osc.frequency.setValueAtTime(o.freq,t0);
+    if(o.glide) osc.frequency.exponentialRampToValueAtTime(Math.max(30,o.glide), t0+(o.dur||0.3));
+    if(o.vibrato){ const lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=o.vibrato; lg.gain.value=o.freq*0.03; lfo.connect(lg); lg.connect(osc.frequency); lfo.start(t0); lfo.stop(t0+o.dur); }
+    const peak=o.gain||0.3;
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(peak, t0+(o.attack||0.02));
+    g.gain.exponentialRampToValueAtTime(0.0001, t0+(o.dur||0.3));
+    osc.connect(g); g.connect(master); osc.start(t0); osc.stop(t0+(o.dur||0.3)+0.1);
+  }
+  function noise(o){
+    if(!enabled || !ensure()) return;
+    const t0=ctx.currentTime+(o.delay||0); const len=o.dur||0.3;
+    const buf=ctx.createBuffer(1, Math.floor(ctx.sampleRate*len), ctx.sampleRate);
+    const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const f=ctx.createBiquadFilter(); f.type=o.filter||'bandpass'; f.frequency.value=o.freq||800; f.Q.value=o.q||1;
+    const g=ctx.createGain(); g.gain.setValueAtTime(o.gain||0.3,t0); g.gain.exponentialRampToValueAtTime(0.0001,t0+len);
+    src.connect(f); f.connect(g); g.connect(master); src.start(t0);
+  }
+  function meow(){
+    tone({type:'sawtooth',freq:520,glide:760,dur:0.12,gain:0.10});
+    tone({type:'sawtooth',freq:760,glide:430,dur:0.42,gain:0.09,delay:0.10});
+    tone({type:'triangle',freq:300,glide:210,dur:0.5,gain:0.07,delay:0.08});
+  }
+  function chime(){ [2093,2637,3136,3520,4186].forEach((f,i)=> tone({type:'sine',freq:f,dur:1.4-i*0.15,gain:0.06,attack:0.005,delay:i*0.05})); }
+  function bell(){ tone({type:'sine',freq:220,dur:1.8,gain:0.20,attack:0.01}); tone({type:'sine',freq:330,dur:1.4,gain:0.08,attack:0.01}); tone({type:'sine',freq:440,dur:1.0,gain:0.05,attack:0.01}); tone({type:'triangle',freq:220,dur:0.6,gain:0.10,attack:0.01}); }
+  function guqin(){ [196,147,110,165].forEach((f,i)=> tone({type:'triangle',freq:f,dur:1.6-i*0.2,gain:0.08,attack:0.005,delay:i*0.22})); }
+  function chant(){ tone({type:'sine',freq:98,dur:2.4,gain:0.06,attack:0.4}); tone({type:'sine',freq:147,dur:2.4,gain:0.03,attack:0.5}); noise({filter:'lowpass',freq:420,dur:2.2,gain:0.04,q:0.6}); }
+  function bird(){ [2600,3200,2800].forEach((f,i)=> tone({type:'sine',freq:f,glide:f*1.3,dur:0.08,gain:0.04,delay:i*0.14})); }
+  function woodfish(){ noise({filter:'bandpass',freq:1500,q:3,dur:0.1,gain:0.22}); tone({type:'sine',freq:880,dur:0.09,gain:0.08}); }
+  function rub(){ noise({filter:'lowpass',freq:700,q:1,dur:0.26,gain:0.12}); }
+  function slide(){ noise({filter:'highpass',freq:2600,dur:0.18,gain:0.06}); }
+  function like(){ tone({type:'sine',freq:880,glide:1320,dur:0.12,gain:0.12}); }
+  function flip(){ noise({filter:'highpass',freq:1800,dur:0.12,gain:0.08}); }
+  function stone(){ noise({filter:'lowpass',freq:500,q:0.8,dur:0.3,gain:0.16}); }
+  function wind(){ noise({filter:'bandpass',freq:600,q:0.5,dur:1.2,gain:0.05}); }
+  function laugh(){ [520,620,520,700].forEach((f,i)=> tone({type:'triangle',freq:f,dur:0.1,gain:0.05,delay:i*0.12})); }
+  function open(){ tone({type:'sine',freq:330,dur:1.0,gain:0.07}); tone({type:'sine',freq:494,dur:1.0,gain:0.05,delay:0.1}); tone({type:'sine',freq:392,dur:1.4,gain:0.06,delay:0.2}); }
+  function purr(){ for(let i=0;i<4;i++) noise({filter:'lowpass',freq:120,q:1,dur:0.2,gain:0.05,delay:i*0.22}); }
+  function play(name){ if(!enabled) return; ({meow,chime,bell,guqin,chant,bird,woodfish,rub,slide,like,flip,stone,wind,laugh,open,purr}[name]||(()=>{}))(); }
+  return { setEnabled, enabled:()=>enabled, ensure, play, meow, chime, bell, guqin, chant, bird, woodfish, rub, slide, like, flip, stone, wind, laugh, open, purr };
+})();
+
+/* ============================ 猫爪进度条，喵喵喵 ============================ */
+const PAWS = 12;
+(function buildPawbar(){ const bar=$('#pawbar'); for(let i=0;i<PAWS;i++){ const d=document.createElement('div'); d.className='paw'; d.innerHTML='<svg viewBox="0 0 100 100"><use href="#paw"/></svg>'; bar.appendChild(d); } })();
+const pawEls = $$('#pawbar .paw');
+const THEME = ['orange','orange','orange','orange','red','red','red','red','orange','orange','orange','orange'];
+function updateProgress(i){
+  pawEls.forEach((p,k)=>{ p.classList.toggle('lit', k<=i); p.classList.toggle('current', k===i); });
+  document.documentElement.style.setProperty('--paw', THEME[i]==='red' ? '#B23A2E' : '#E89B5A');
+}
+
+/* ============================ 数据 ============================ */
+const NODES = [
+  {era:'西晋 · 泰始二年', year:'公元 266', desc:'始建，初名遵善寺。', small:'故事，从这里开始。'},
+  {era:'隋 · 开皇年间', year:'隋文帝建大兴城', desc:'寺处靖善坊，取“大兴”“善”得名。', small:'设了国立译经馆，成了佛学中心。'},
+  {era:'唐 · 开元年间', year:'开元三大士', desc:'善无畏、金刚智、不空驻锡。', small:'译密典，设灌顶道场。'},
+  {era:'唐 · 法脉东传', year:'不空—惠果—空海', desc:'密宗东传日本，也远播韩国。', small:'大兴善寺，被尊为祖庭。'},
+  {era:'唐末—明清', year:'会昌法难', desc:'毁了一次又一次，又都修了回来。', small:'钟鼓楼还在，香火没断。'},
+  {era:'今天', year:'大兴善寺 · 猫猫寺', desc:'僧人收留了流浪猫，猫又把人领了回来。', small:'慈悲没变，只是多了几只在佛前打盹的猫。'}
+];
+
+/* ============================ 页面管理转场 ============================ */
+let current = 0;
+let animating = false;
+const pages = $$('.page');
+const flashEl = $('#flash');
+let trailTimer = null;
+
+function toast(msg, dur=1600){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), dur); }
+
+function startTrail(container, selector, bottom){
+  stopTrail();
+  const stageR = stage.getBoundingClientRect();
+  trailTimer = setInterval(()=>{
+    const el = container.querySelector(selector); if(!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (r.left - stageR.left) / stageR.width * 750;
+    const pw = document.createElement('div'); pw.className='trailpaw';
+    pw.style.left = (x - 36) + 'px'; pw.style.bottom = bottom + 'px';
+    pw.innerHTML = '<svg viewBox="0 0 100 100"><use href="#paw"/></svg>';
+    container.appendChild(pw); setTimeout(()=>pw.remove(), 2600);
+  }, 1500);
+}
+function stopTrail(){ if(trailTimer){ clearInterval(trailTimer); trailTimer=null; } }
+
+function enterSound(i){
+  const map = {0:'meow',1:'purr',2:'slide',3:'purr',4:'meow',5:'bell',6:'guqin',7:'bell',8:'open',9:'stone',10:'meow',11:'bell'};
+  Audio.play(map[i]);
+  if(i===1) setTimeout(()=>Audio.purr(), 600);
+  if(i===2) setTimeout(()=>Audio.meow(), 700);
+  if(i===3) setTimeout(()=>Audio.purr(), 600);
+  if(i===5){ Audio.chime(); setTimeout(()=>Audio.bell(), 800); }
+  if(i===6) setTimeout(()=>Audio.guqin(), 400);
+  if(i===7) setTimeout(()=>Audio.bell(), 500);
+  if(i===8) setTimeout(()=>Audio.wind(), 800);
+  if(i===9) setTimeout(()=>Audio.wind(), 700);
+  if(i===10) setTimeout(()=>Audio.laugh(), 1100);
+  if(i===11) setTimeout(()=>Audio.meow(), 1500);
+}
+
+function onEnter(i){
+  if(i===9) startTrail($('#p8'), '.catpass', 160);
+}
+function onLeave(i){ if(i===9) stopTrail(); }
+
+function go(to){
+  to = clamp(to, 0, pages.length-1);
+  if(to===current || animating) return;
+  animating = true;
+  flashEl.classList.add('on');
+  setTimeout(()=>{
+    onLeave(current);
+    pages[current].classList.remove('active');
+    pages[to].classList.add('active');
+    current = to;
+    updateProgress(to);
+    enterSound(to);
+    if(to===6) buildNodes();
+    onEnter(to);
+    flashEl.classList.remove('on');
+    animating = false;
+  }, 300);
+}
+
+/* ============================ 加载ing ============================ */
+let loadReady = false;
+const loadSeg = $('#p0 .seg'), loadPaw = $('#loadPaw');
+function setLoad(p){ p=clamp(p,0,100); loadSeg.style.setProperty('--p', p); if(p>=100){ loadReady=true; loadPaw.classList.add('ready'); } }
+(function loadSim(){ let p=0; const iv=setInterval(()=>{ p += 4 + Math.random()*8; if(p>=100){ p=100; clearInterval(iv); setLoad(100); } else setLoad(p); }, 90); setLoad(0); })();
+$('#loadWrap').addEventListener('click', ()=>{ Audio.play('meow'); go(1); });
+
+/* ============================ 时间轴 ============================ */
+let nodeIndex=0;
+function buildNodes(){
+  const wrap=$('#nodes'); if(wrap.dataset.built){ positionNodes(); return; } wrap.dataset.built='1';
+  NODES.forEach((n,i)=>{
+    const d=document.createElement('div'); d.className='node';
+    d.innerHTML = '<div class="marker"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="16" fill="currentColor"/></svg></div>'+
+      '<div class="card"><div class="era">'+n.era+'</div><div class="year">'+n.year+'</div><div class="desc">'+n.desc+(n.small?'<span class="small">'+n.small+'</span>':'')+'</div></div>';
+    d.addEventListener('click', ()=>{ nodeIndex=i; positionNodes(); Audio.play('flip'); });
+    wrap.appendChild(d);
+  });
+  positionNodes();
+}
+function positionNodes(){
+  $$('#nodes .node').forEach((n,i)=>{ n.classList.toggle('cur', i===nodeIndex); });
+  $('#nodes').style.transform='translateX('+(-nodeIndex*600+75)+'px)';
+}
+function nodeShift(dir){ const n=nodeIndex+dir; if(n<0||n>=NODES.length) return; nodeIndex=n; positionNodes(); Audio.play('bell'); }
+
+/* ============================ time时间 ============================ */
+let reveal=50, revealRaf=null;
+function setReveal(v){ reveal=clamp(v,0,100); const wrap=$('#crackwrap'); wrap.querySelector('.color').style.clipPath='inset(0 0 0 '+reveal+'%)'; wrap.querySelector('.slider').style.left=reveal+'%'; wrap.querySelector('.handle').style.left=reveal+'%'; }
+setReveal(50);
+
+/* ============================ 社媒点赞 ============================ */
+let liked=false;
+$('#likeBtn').addEventListener('click', e=>{
+  e.stopPropagation(); Audio.play('like'); liked=!liked;
+  $('#likeBtn').firstChild.textContent = liked?'♥ ':'♡ ';
+  $('#likeBtn').classList.toggle('liked', liked);
+  $('#likeNum').textContent = liked?'2.3万+1':'2.3万';
+  const p=stageXY(e);
+  const h=document.createElement('span'); h.className='heart'; h.textContent='♥';
+  h.style.left=p.x+'px'; h.style.top=p.y+'px';
+  $('#p2').appendChild(h); setTimeout(()=>h.remove(),1600);
+});
+
+/* ============================ 页 7 地图节点 ============================ */
+const mapTip=$('#mapTip');
+function showMapTip(txt, x, y){
+  mapTip.textContent=txt; mapTip.classList.add('show');
+  mapTip.style.left=(x+10)+'px'; mapTip.style.top=(y-44)+'px';
+  clearTimeout(mapTip._h); mapTip._h=setTimeout(()=>mapTip.classList.remove('show'),1800);
+}
+$('#cityJapan').addEventListener('click', e=>{ e.stopPropagation(); Audio.play('open'); const p=stageXY(e); showMapTip('日本真言宗', p.x, p.y); });
+$('#cityKorea').addEventListener('click', e=>{ e.stopPropagation(); Audio.play('open'); const p=stageXY(e); showMapTip('韩国真觉宗', p.x, p.y); });
+$('#cityChangan').addEventListener('click', e=>{ e.stopPropagation(); Audio.play('bell'); const p=stageXY(e); showMapTip('长安 · 大兴善寺', p.x, p.y); });
+
+/* ============================ 分享卡 ============================ */
+function drawPawCtx(c, x, y, r){
+  c.beginPath(); c.ellipse(x-r*0.25,y-r*0.35,r*0.32,r*0.42,0,0,Math.PI*2); c.fill();
+  c.beginPath(); c.ellipse(x-r*0.03,y-r*0.55,r*0.32,r*0.42,0,0,Math.PI*2); c.fill();
+  c.beginPath(); c.ellipse(x+r*0.19,y-r*0.35,r*0.32,r*0.42,0,0,Math.PI*2); c.fill();
+  c.beginPath(); c.ellipse(x+r*0.42,y-r*0.28,r*0.32,r*0.42,0,0,Math.PI*2); c.fill();
+  c.beginPath(); c.ellipse(x,y+r*0.25,r*0.55,r*0.6,0,0,Math.PI*2); c.fill();
+}
+function buildShareCard(canvas, w, h){
+  const c=canvas.getContext('2d'), pad=w*0.08;
+  const grad=c.createLinearGradient(0,0,0,h); grad.addColorStop(0,'#F5EFE6'); grad.addColorStop(1,'#eadfcd');
+  c.fillStyle=grad; c.fillRect(0,0,w,h);
+  c.fillStyle='#E89B5A'; drawPawCtx(c, w*0.78, h*0.18, w*0.12);
+  c.fillStyle='#3F454A'; c.font='700 '+w*0.085+'px "Noto Serif SC", serif'; c.fillText('猫是入口，历史是底色。', pad, h*0.42);
+  c.fillStyle='#B23A2E'; c.font='500 '+w*0.055+'px "Noto Sans SC", sans-serif'; c.fillText('大兴善寺 · 猫猫寺', pad, h*0.52);
+  c.fillStyle='#5a5f63'; c.font='400 '+w*0.045+'px "Noto Sans SC", sans-serif'; c.fillText('从一只猫，走进一座祖庭。', pad, h*0.62);
+  c.fillStyle='#2F6B6B'; c.font='400 '+w*0.04+'px "Noto Sans SC", sans-serif'; c.fillText('📍 大兴善寺', pad, h*0.88);
+}
+$('#genCard').addEventListener('click', ()=>{
+  Audio.play('chime');
+  const cv=document.createElement('canvas'); cv.width=900; cv.height=1400; buildShareCard(cv,900,1400);
+  try{ const a=document.createElement('a'); a.download='猫猫寺-分享卡.png'; a.href=cv.toDataURL('image/png'); a.click(); toast('分享卡已生成'); }
+  catch(err){ toast('可截图保存分享卡'); }
+});
+$('#shareBtn').addEventListener('click', ()=>{
+  Audio.play('bell'); const text='猫是入口，历史是底色。大兴善寺 · 猫猫寺 —— 从一只猫，走进一座祖庭。';
+  if(navigator.share){ navigator.share({title:'猫猫寺？大兴善寺。', text}).catch(()=>{}); }
+  else { navigator.clipboard && navigator.clipboard.writeText(text); toast('文案已复制，快去分享吧'); }
+});
+$('#restartBtn').addEventListener('click', ()=>{ Audio.play('slide'); location.reload(); });
+
+/* ============================ 音效开关与首次提示 ============================ */
+const soundToggle=$('#soundToggle');
+function syncSoundUI(){ soundToggle.textContent = Audio.enabled() ? '🔊' : '🔇'; }
+soundToggle.addEventListener('click', e=>{
+  e.stopPropagation(); const v=!Audio.enabled(); Audio.setEnabled(v); syncSoundUI();
+  toast(v?'音效已开启':'音效已关闭'); if(v) Audio.play('meow');
+});
+let prompted=false;
+$('#soundYes').addEventListener('click', ()=>{ Audio.setEnabled(true); syncSoundUI(); $('#soundPrompt').classList.remove('show'); Audio.play('meow'); });
+$('#soundNo').addEventListener('click', ()=>{ $('#soundPrompt').classList.remove('show'); });
+stage.addEventListener('pointerdown', ()=>{
+  Audio.ensure();
+  if(!prompted){ prompted=true; setTimeout(()=>{ if(!Audio.enabled()) $('#soundPrompt').classList.add('show'); }, 700); }
+});
+
+/* ============================ 猫互动页 ============================ */
+let affinity=0, lastAff=0, lastPurr=0, p1Done=false;
+function floatHeart(container, x, y){
+  const h=document.createElement('span'); h.className='heart'; h.textContent='♥';
+  h.style.left=x+'px'; h.style.top=y+'px'; container.appendChild(h); setTimeout(()=>h.remove(),1600);
+}
+function addAffinity(n){
+  affinity=clamp(affinity+n,0,100);
+  const f=$('#affFill'); if(f) f.style.width=affinity+'%';
+  if(affinity>=100 && !p1Done){
+    p1Done=true;
+    const cat=$('#rubCat'); if(cat) cat.classList.add('happy');
+    const t2=$('#p1 .cover-txt .t2'); if(t2) t2.textContent='呼噜声响起，它愿意带你进去了。';
+    const b=$('#enterBtn'); if(b) b.classList.add('ready');
+    Audio.play('chime'); toast('它很高兴，为你带路');
+  }
+}
+function petCat(e, tap){
+  const now=Date.now();
+  if(tap) addAffinity(9);
+  else if(now-lastAff>85){ addAffinity(3.4); lastAff=now; }
+  const p=stageXY(e);
+  if(now-lastPurr>620){ lastPurr=now; Audio.play('purr'); }
+  if(Math.random()<0.6) floatHeart($('#p1'), p.x-12, p.y-14);
+}
+
+/* ============================ 手势系统 ============================ */
+let g = { active:false, x0:0, y0:0, axis:null, lastX:0, lastY:0, moved:false, rub:false, lastRub:0, pet:false, lastPaw:0 };
+
+stage.addEventListener('pointerdown', e=>{
+  g.active=true; g.axis=null; g.moved=false;
+  g.x0=e.clientX; g.y0=e.clientY; g.lastX=e.clientX; g.lastY=e.clientY;
+  g.rub = (current===10) && !!e.target.closest('#strokeZone');
+  g.pet = (current===1) && !!e.target.closest('#rubCat');
+  g.lastRub=0; g.lastPaw=0; lastAff=0;
+  if(g.pet) petCat(e, true);
+  if(g.rub){ spawnRandomMedia(); }
+});
+stage.addEventListener('pointermove', e=>{
+  if(!g.active) return;
+
+  if(g.pet){ e.preventDefault(); petCat(e, false); return; }
+
+  const dx=e.clientX-g.x0, dy=e.clientY-g.y0;
+  const adx=Math.abs(dx), ady=Math.abs(dy);
+  if(!g.axis && (adx>9 || ady>9)){ g.axis = adx>ady ? 'h':'v'; g.moved=true; }
+  if(!g.moved) return;
+
+  if(g.rub){ // 抚摸中间浮现随机图
+    e.preventDefault();
+    const now=Date.now();
+    if(now-g.lastRub>180){ Audio.play('rub'); g.lastRub=now; }
+    if(now-g.lastPaw>360){ g.lastPaw=now; spawnRandomMedia(); }
+    return;
+  }
+
+  if(g.axis==='v'){
+    e.preventDefault();
+  } else {
+    const ldx = e.clientX - g.lastX;
+    if(current===9){ reveal = clamp(reveal + ldx/6, 0, 100); if(!revealRaf) revealRaf = requestAnimationFrame(()=>{ setReveal(reveal); revealRaf=null; }); }
+    if(current===6){ pawTrail(e); }
+  }
+  g.lastX=e.clientX; g.lastY=e.clientY;
+});
+stage.addEventListener('pointerup', e=>{
+  if(!g.active) return; g.active=false;
+
+  if(g.pet){ return; }
+  if(g.rub){ return; }
+  if(!g.moved || !g.axis) return;
+
+  const dx=e.clientX-g.x0, dy=e.clientY-g.y0;
+  if(g.axis==='v'){
+    if(Math.abs(dy)<60) return;
+    go(dy<0 ? current+1 : current-1);
+  } else {
+    if(Math.abs(dx)<46) return;
+    if(current===6){ nodeShift(dx<0?1:-1); }
+  }
+});
+
+/* ============================ 时间轴：猫爪滑动 ============================ */
+let lastTrailPaw=0;
+function pawTrail(e){
+  const now=Date.now();
+  if(now-lastTrailPaw<140) return;
+  lastTrailPaw=now;
+  const p=stageXY(e);
+  const pw=document.createElement('div'); pw.className='trailpaw';
+  pw.style.left=(p.x-23)+'px'; pw.style.top=(p.y-23)+'px';
+  pw.innerHTML='<svg viewBox="0 0 100 100"><use href="#paw"/></svg>';
+  $('#p5').appendChild(pw); setTimeout(()=>pw.remove(), 2200);
+}
+
+/* ============================ 今日页：抚摸中间出随机图 ============================ */
+const RANDOM_MEDIA = [
+  {t:'img', src:'images/random/mmexport1791811165795.jpg'},
+  {t:'img', src:'images/random/mmexport1791811166924.jpg'},
+  {t:'img', src:'images/random/mmexport1791811168092.jpg'},
+  {t:'vid', src:'images/random/mmexport1791811169348.mp4'},
+  {t:'img', src:'images/random/mmexport1791811171148.jpg'},
+  {t:'vid', src:'images/random/mmexport1791811172320.mp4'},
+  {t:'img', src:'images/random/mmexport1791811173258.jpg'}
+];
+function spawnRandomMedia(){
+  const page=$('#p9'); if(!page) return;
+  const m=RANDOM_MEDIA[Math.floor(Math.random()*RANDOM_MEDIA.length)];
+  const w=190+Math.random()*170;
+  const x=50+Math.random()*(750-w-100);
+  const y=150+Math.random()*(1334-360-w);
+  const el=document.createElement('div'); el.className='randmedia';
+  el.style.left=x+'px'; el.style.top=y+'px'; el.style.width=w+'px'; el.style.height=w+'px';
+  el.style.rotate=(Math.random()*26-13)+'deg';
+  el.innerHTML = m.t==='img' ? '<img src="'+m.src+'" alt="" decoding="async">' : '<video src="'+m.src+'" autoplay muted loop playsinline></video>';
+  page.appendChild(el);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+  setTimeout(()=>el.classList.add('out'), 2600);
+  setTimeout(()=>el.remove(), 3300);
+}
+
+/* ============================ 按钮跳转 ============================ */
+$$('[data-goto]').forEach(b=> b.addEventListener('click', e=>{ e.stopPropagation(); go(+b.dataset.goto); }));
+
+/* ============================ 初始化 ============================ */
+pages[0].classList.add('active');    //修复页
+updateProgress(0);
+buildNodes(); positionNodes();
+setLoad(0);
+</script>
+</body>
+</html>
